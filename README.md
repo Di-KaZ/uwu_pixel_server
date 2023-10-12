@@ -8,7 +8,7 @@ dart pub global activate dart_frog_cli
 ```
 
 ## If youre on windows
-modify the [initial_load.dart file](routes/initial_load.dart)
+modify the [initial_load.dart file](routes/initial_load.dart#L10-12)
 
 comment line `10` and uncomment line `12`
 
