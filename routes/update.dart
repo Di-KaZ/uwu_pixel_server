@@ -6,6 +6,7 @@ import 'package:dart_frog_web_socket/dart_frog_web_socket.dart';
 import 'package:uwu_pixel_server/db.dart';
 import 'package:uwu_pixel_server/models/pixel.dart';
 
+/// all clients connected to the server
 List<WebSocketChannel> clients = [];
 
 Handler get onRequest {
@@ -14,27 +15,36 @@ Handler get onRequest {
       clients.add(channel);
       print('client ${channel.hashCode} connect');
       channel.stream.listen(
-        (message) {
-          // Handle incoming messages.
-          if (message is! String) return;
-          final pixelData = jsonDecode(message) as Map;
-          pixelData["id"] = pixelData["x"] + pixelData["y"];
-          final pixel = Pixel.fromJson(
-            Map<String, dynamic>.from(pixelData),
-          );
-
-          isar.write((isar) => isar.pixels.put(pixel));
-
-          for (final client in clients) {
-            client.sink.add(message);
-          }
-        },
+        cancelOnError: true,
+        _handlePixelPlacement,
         onDone: () {
           print('client ${channel.hashCode} disconnect');
-          clients
-              .removeWhere((element) => element.hashCode == channel.hashCode);
+          clients.removeWhere(
+            (cli) => cli.hashCode == channel.hashCode,
+          );
         },
       );
     },
   );
+}
+
+void _handlePixelPlacement(dynamic message) {
+  if (message is! String) return;
+
+  final pixelData = jsonDecode(message) as Map;
+
+  /// create an unique id from x + y
+  pixelData['id'] = pixelData['x'] + pixelData['y'];
+
+  final pixel = Pixel.fromJson(
+    Map<String, dynamic>.from(pixelData),
+  );
+
+  // save it to db
+  isar.write((isar) => isar.pixels.put(pixel));
+
+  /// loop over all connected client and send the new [Pixel]
+  for (final client in clients) {
+    client.sink.add(message);
+  }
 }
