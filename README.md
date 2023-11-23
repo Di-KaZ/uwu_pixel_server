@@ -1,12 +1,27 @@
 # uwu_pixel_server
 
-[![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
-[![License: MIT][license_badge]][license_link]
-[![Powered by Dart Frog](https://img.shields.io/endpoint?url=https://tinyurl.com/dartfrog-badge)](https://dartfrog.vgv.dev)
+# Run the server
 
-An example application built with dart_frog
+#### UPDATE DOCKERFILE
 
-[license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
-[license_link]: https://opensource.org/licenses/MIT
-[very_good_analysis_badge]: https://img.shields.io/badge/style-very_good_analysis-B22C89.svg
-[very_good_analysis_link]: https://pub.dev/packages/very_good_analysis
+With the dockerfile just use those two commands :
+
+```bash
+docker build -t uwu_server .
+docker run -it -p 8080:8080 --rm --name uwu_server uwu_server
+```
+
+```
+ 📦 Install the dart_frog cli from pub.dev
+dart pub global activate dart_frog_cli
+```
+
+## If youre on windows
+modify the [initial_load.dart file](routes/initial_load.dart#L10-L12)
+
+comment line `10` and uncomment line `12`
+
+```
+dart run build_runner build
+dart_frog dev
+```
