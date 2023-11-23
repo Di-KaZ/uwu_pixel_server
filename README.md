@@ -2,6 +2,15 @@
 
 # Run the server
 
+#### UPDATE DOCKERFILE
+
+With the dockerfile just use those two commands :
+
+```bash
+docker build -t uwu_server .
+docker run -it -p 8080:8080 --rm --name uwu_server uwu_server
+```
+
 ```
  📦 Install the dart_frog cli from pub.dev
 dart pub global activate dart_frog_cli
